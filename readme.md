@@ -31,7 +31,15 @@ La aplicación utiliza las siguientes propiedades configuradas en `application.p
 
 Asegúrate de ajustar estas configuraciones según tus necesidades.
 
----
+## Script Base de datos
+
+El Script para la creación de la base de datos se encuentra dentro de la ruta 
+```bash
+src/main/resources/schema.sql
+```
+La aplicación está configurada para que construya automáticamente el modelo de datos en la base de datos en memoria H2
+
+---------------------
 
 ## Cómo ejecutar la aplicación
 
