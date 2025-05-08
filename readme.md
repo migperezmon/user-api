@@ -40,17 +40,18 @@ Asegúrate de ajustar estas configuraciones según tus necesidades.
 #### 1.a. Construir la imagen Docker:
 ```bash
 docker build -t user-api .
-
+```
 ### 1.b. **Ejecutar el servicio desde la aplicación**
 ```bash
 docker run -p 8080:8080 user-api
-
+```
 ### 2. **Ejecutar localmente sin Docker**
 
 #### 2.a. Construir la imagen Docker:
 ```bash
 gradle clean build
-
+```
 ### 2.b. **Ejecutar el servicio desde la aplicación**
 ```bash
 java -jar [user-api-0.0.1-SNAPSHOT.jar]
+```
