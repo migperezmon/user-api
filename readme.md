@@ -20,7 +20,7 @@ Antes de ejecutar la aplicación, asegúrate de tener instalados los siguientes 
 La aplicación utiliza las siguientes propiedades configuradas en `application.properties`:
 
 - **JWT**:
-  - `jwt.secret`: Clave secreta para firmar los tokens JWT.
+  - `jwt.secret`: Clave secreta para firmar los tokens JWT. (Ésta está hardcoded pero deberá ser almacenada en algún sistema como AWS SecretsManager e inyectada en los procesos de CI/CD)
   - `jwt.issuer`: Nombre del emisor del token.
   - `jwt.expiration.time`: Tiempo de expiración del token en milisegundos.
   - `jwt.roles`: Roles predeterminados. (No están siendo usados en esta prueba)
@@ -37,6 +37,20 @@ Asegúrate de ajustar estas configuraciones según tus necesidades.
 
 ### 1. **Ejecutar con Docker**
 
-#### Construir la imagen Docker:
+#### 1.a. Construir la imagen Docker:
 ```bash
 docker build -t user-api .
+
+### 1.b. **Ejecutar el servicio desde la aplicación**
+```bash
+docker run -p 8080:8080 user-api
+
+### 2. **Ejecutar localmente sin Docker**
+
+#### 2.a. Construir la imagen Docker:
+```bash
+gradle clean build
+
+### 2.b. **Ejecutar el servicio desde la aplicación**
+```bash
+java -jar [user-api-0.0.1-SNAPSHOT.jar]
