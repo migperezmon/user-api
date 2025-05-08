@@ -1,0 +1,19 @@
+package cl.ntt.userapi.user_api.config;
+
+import org.springdoc.core.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwaggerConfig {
+
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("public")
+                .pathsToMatch("/**")
+                .packagesToScan("cl.ntt.userapi.user_api.controllers")
+                .build();
+    }
+    
+}
