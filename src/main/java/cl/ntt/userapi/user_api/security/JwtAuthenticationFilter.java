@@ -34,13 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @SuppressWarnings("null") HttpServletResponse response, @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
 
-                String requestPath = request.getRequestURI();
+        // String requestPath = request.getRequestURI();
 
-        if (requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/swagger-ui")
-                || requestPath.startsWith("/h2-console")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        // if (requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/swagger-ui")
+        //         || requestPath.startsWith("/h2-console")) {
+        //     log.info("Skipping JWT filter for path: {}", requestPath);
+        //     filterChain.doFilter(request, response);
+        //     return;
+        // }
 
         String authHeader = request.getHeader("Authorization");
 

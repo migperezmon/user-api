@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AnonymousConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,7 +25,7 @@ public class SecurityConfig {
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	private static final String[] PATH_WHITELIST = {
-			"/v1/user/create", "/h2-console/**", "/v1/auth/login/**"
+			"/v1/user/create", "/v1/auth/login", "/h2-console/**"
 	};
 
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
@@ -34,18 +35,18 @@ public class SecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		log.info("Configuring web security customizer");
-		return web -> web.ignoring().requestMatchers(PATH_WHITELIST);
-	}
+		return web -> web.ignoring().requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html",
+				"/h2-console/**");
+	}	
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		log.info("Configuring security filter chain");
-		http
+		http				
 				.anonymous(AnonymousConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/v1/user/create", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/favicon.ico").permitAll()
 						.requestMatchers(PATH_WHITELIST).permitAll()
-						.requestMatchers("/swagger-ui/**").permitAll()
-						.requestMatchers("/v3/api-docs/**").permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling(exception -> exception
@@ -61,6 +62,7 @@ public class SecurityConfig {
 							response.getWriter().write(jsonResponse);
 						}))
 				.csrf(csrf -> csrf.disable())
+				.httpBasic(AbstractHttpConfigurer::disable)
 				.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable));
 
 		return http.build();

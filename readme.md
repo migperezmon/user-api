@@ -6,10 +6,10 @@ Esta es una API para la gestión de usuarios
 
 Antes de ejecutar la aplicación, asegúrate de tener instalados los siguientes programas:
 
-- [Java 17] (https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
-- [Gradle 8.1.3] (https://gradle.org/releases/) (opcional, si no usas Docker)
-- [Docker] (https://www.docker.com/)
-- [Postman] (https://www.postman.com/) (opcional, para probar la API)
+- [Java 17] 
+- [Gradle 8.1.3] 
+- [Docker] 
+- [Postman]
 
 ---
 
@@ -33,10 +33,18 @@ Asegúrate de ajustar estas configuraciones según tus necesidades.
 
 ## Script Base de datos
 
-El Script para la creación de la base de datos se encuentra dentro de la ruta 
+El Script para la creación de la base de datos se encuentra dentro de la ruta raíz del proyecto
 ```bash
-src/main/resources/schema.sql
+./schema.sql
 ```
+La aplicación está configurada para que construya automáticamente el modelo de datos en la base de datos en memoria H2
+
+## Diagrama de Secuencia
+
+El diagrama de solución se encuentra en la raíz del pryecto
+
+./Diagrama de Secuencia.png
+
 La aplicación está configurada para que construya automáticamente el modelo de datos en la base de datos en memoria H2
 
 ---------------------

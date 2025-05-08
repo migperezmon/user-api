@@ -32,6 +32,15 @@ public class UserController {
 
     @PostMapping("/v1/user/create")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest user) {
+        if (user.getNombre() == null || user.getNombre().isEmpty()) {
+            throw new BadRequestException("El nombre no puede ser nulo o vacío");
+        }
+        if (user.getCorreo() == null || user.getCorreo().isEmpty()) {
+            throw new BadRequestException("El apellido no puede ser nulo o vacío");
+        }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new BadRequestException("La contraseña no puede ser nula o vacía");
+        }
         if (!Utils.isValidEmail(user.getCorreo())) {
             throw new BadRequestException("El correo no es válido");
         }

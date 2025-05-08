@@ -19,12 +19,15 @@ public class AuthController {
     public AuthController(UserService userService) {
         this.userService = userService;
     }
-
+    
     @PostMapping("/v1/auth/login")
     public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
         log.info("Login request: {}", loginRequest);
+        if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(userService.login(loginRequest));
-        
+
     }
 
 }
