@@ -47,6 +47,13 @@ El diagrama de solución se encuentra en la raíz del pryecto
 
 La aplicación está configurada para que construya automáticamente el modelo de datos en la base de datos en memoria H2
 
+## Postman Collection & Environment
+
+En la raíz del proyecto, dentro de la carpeta postman, se encuentran los siguientes archivos:
+
+- user.api.postman.json: Contiene la colección de Postman con llamadas a todos los endpoints disponibles.
+- dev.env.json: Contiene el entorno de Postman con la variable de entorno del token, la cual se actualiza automáticamente al realizar la llamada al endpoint de login.
+
 ---------------------
 
 ## Cómo ejecutar la aplicación
