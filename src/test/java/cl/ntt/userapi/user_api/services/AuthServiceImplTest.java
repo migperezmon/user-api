@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import cl.ntt.userapi.user_api.dto.LoginRequest;
-import cl.ntt.userapi.user_api.error.NotFoundException;
 import cl.ntt.userapi.user_api.error.UnauthorizedException;
 import cl.ntt.userapi.user_api.model.User;
 import cl.ntt.userapi.user_api.repository.UserRepository;
@@ -40,7 +39,7 @@ class UserServiceImpTest {
 
         when(userRepository.findByEmailAndActivoTrue(loginRequest.getEmail())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.login(loginRequest));
+        assertThrows(UnauthorizedException.class, () -> userService.login(loginRequest));
         verify(userRepository, times(1)).findByEmailAndActivoTrue(loginRequest.getEmail());
         verify(userRepository, never()).save(any(User.class));
     }

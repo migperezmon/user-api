@@ -86,7 +86,7 @@ public class UserServiceImp implements UserService {
 	@Override
 	public UserResponse login(LoginRequest loginRequest) {
 		User user = userRepository.findByEmailAndActivoTrue(loginRequest.getEmail())
-				.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+				.orElseThrow(() -> new UnauthorizedException(INVALID_USERNAME_OR_PASSWORD));
 		if (!user.getPassword().equals(loginRequest.getPassword())) {
 			throw new UnauthorizedException(INVALID_USERNAME_OR_PASSWORD);
 		}
