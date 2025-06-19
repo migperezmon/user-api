@@ -70,7 +70,7 @@ docker run -p 8080:8080 user-api
 ```
 ### 2. **Ejecutar localmente sin Docker**
 
-#### 2.a. Construir la imagen Docker:
+#### 2.a. Compilar la aplicación con Gradle:
 ```bash
 gradle clean build
 ```
