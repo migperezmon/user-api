@@ -15,11 +15,11 @@ import cl.ntt.userapi.user_api.model.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
     @SuppressWarnings("null")
-    public Optional<User> findById(UUID id) throws NotFoundException;
+    public Optional<User> findByIdAndActivoTrue(UUID id) throws NotFoundException;
 
-    public Optional<User> findByEmail(String email) throws NotFoundException;
+    public Optional<User> findByEmailAndActivoTrue(String email) throws NotFoundException;
 
-    public Optional<User> findByEmailAndPassword(String email, String password) throws NotFoundException;
+    public Optional<User> findByEmailAndPasswordAndActivoTrue(String email, String password) throws NotFoundException;
 
     @Modifying
     @Transactional

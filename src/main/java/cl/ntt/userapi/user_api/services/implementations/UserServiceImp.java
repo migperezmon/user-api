@@ -11,7 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import cl.ntt.userapi.user_api.dto.LoginRequest;
-import cl.ntt.userapi.user_api.dto.UserRequest;
+import cl.ntt.userapi.user_api.dto.PatchUserRequest;
+import cl.ntt.userapi.user_api.dto.UpdateUserRequest;
+import cl.ntt.userapi.user_api.dto.CreateUserRequest;
 import cl.ntt.userapi.user_api.dto.UserResponse;
 import cl.ntt.userapi.user_api.error.NotFoundException;
 import cl.ntt.userapi.user_api.error.UnauthorizedException;
@@ -39,9 +41,9 @@ public class UserServiceImp implements UserService {
 	private static final String INVALID_USERNAME_OR_PASSWORD = "Usuario o contraseña inválidos";
 
 	@Override
-	public UserResponse createUser(UserRequest userRequest) {
+	public UserResponse createUser(CreateUserRequest userRequest) {
 		if (userExists(userRequest.getCorreo())) {
-			throw new DataIntegrityViolationException("El correo ya existe");
+			throw new DataIntegrityViolationException("El correo ya está registrado");
 		}
 		User user = Mapper.userRequestToUser(userRequest);
 		user.getTelephones().forEach(telephone -> telephone.setUser(user));
@@ -56,14 +58,13 @@ public class UserServiceImp implements UserService {
 	}
 
 	private boolean userExists(String email) {
-		return userRepository.findByEmail(email).isPresent();
+		return userRepository.findByEmailAndActivoTrue(email).isPresent();
 	}
 
 	@Override
 	public List<UserResponse> getAllUsers() {
 		List<User> users = userRepository.findAll();
 		return users.stream()
-				.peek(user -> user.setToken(null))
 				.map(this::buildUserResponse)
 				.toList();
 	}
@@ -76,14 +77,15 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public UserResponse getByEmail(String email) {
-		User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+		User user = userRepository.findByEmailAndActivoTrue(email)
+				.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 		user.setToken(null);
 		return buildUserResponse(user);
 	}
 
 	@Override
 	public UserResponse login(LoginRequest loginRequest) {
-		User user = userRepository.findByEmail(loginRequest.getEmail())
+		User user = userRepository.findByEmailAndActivoTrue(loginRequest.getEmail())
 				.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 		if (!user.getPassword().equals(loginRequest.getPassword())) {
 			throw new UnauthorizedException(INVALID_USERNAME_OR_PASSWORD);
@@ -94,12 +96,12 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public UserResponse updateUser(UUID id, UserRequest userRequest) {
-		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+	public UserResponse updateUser(UpdateUserRequest userRequest) {
+		User user = userRepository.findById(userRequest.getId())
+				.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 		user.setName(userRequest.getNombre());
 		user.setEmail(userRequest.getCorreo());
 		user.setPassword(userRequest.getPassword());
-		user.setUpdatedAt(LocalDateTime.now());
 
 		updateTelephones(userRequest, user);
 
@@ -110,22 +112,22 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public UserResponse patchUser(UUID id, UserRequest userRequest) {
-		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+	public UserResponse patchUser(PatchUserRequest userRequest) {
+		User user = userRepository.findById(userRequest.getId())
+				.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 		log.info("Patch User patchMethod: {}", user);
 		// Actualiza solo los campos presentes en la solicitud
-		if (userRequest.getNombre() != null) {
+		if (userRequest.getNombre() != null && !userRequest.getNombre().isBlank()) {
 			user.setName(userRequest.getNombre());
 		}
-		if (userRequest.getCorreo() != null) {
+		if (userRequest.getCorreo() != null && !userRequest.getCorreo().isBlank()) {
 			user.setEmail(userRequest.getCorreo());
 		}
-		if (userRequest.getPassword() != null) {
+		if (userRequest.getPassword() != null && !userRequest.getPassword().isBlank()) {
 			user.setPassword(userRequest.getPassword());
 		}
 		patchTelephones(userRequest, user);
 
-		user.setUpdatedAt(LocalDateTime.now());
 		User updatedUser = userRepository.save(user);
 		updatedUser.setToken(null);
 		return buildUserResponse(updatedUser);
@@ -145,7 +147,6 @@ public class UserServiceImp implements UserService {
 		}
 
 		user.setActivo(false);
-		user.setUpdatedAt(LocalDateTime.now());
 		user.setDeletedAt(LocalDateTime.now());
 		user.getTelephones().forEach(telephone -> telephone.setDeletedAt(LocalDateTime.now()));
 		userRepository.save(user);
@@ -153,7 +154,7 @@ public class UserServiceImp implements UserService {
 		return buildUserResponse(user);
 	}
 
-	public void updateTelephones(UserRequest userRequest, User user) {
+	public void updateTelephones(UpdateUserRequest userRequest, User user) {
 		List<Telephone> existingTelephones = user.getTelephones();
 
 		if (userRequest.getTelefonos() == null || userRequest.getTelefonos().isEmpty()) {
@@ -171,17 +172,34 @@ public class UserServiceImp implements UserService {
 			return !existsInNewList;
 		});
 
-		newTelephones.stream()
-				.filter(newPhone -> newPhone.getId() == null || existingTelephones.stream()
-						.noneMatch(existing -> existing.getId().equals(newPhone.getId())))
-				.forEach(newPhone -> {
-					newPhone.setUser(user);
-					newPhone.setCreatedAt(LocalDateTime.now());
-					existingTelephones.add(newPhone);
-				});
+		newTelephones.forEach(newPhone -> {
+			if (newPhone.getId() != null) {
+				existingTelephones.stream()
+						.filter(existing -> existing.getId().equals(newPhone.getId()))
+						.findFirst()
+						.ifPresentOrElse(
+								existing -> {
+									existing.setNumber(newPhone.getNumber());
+									existing.setCityCode(newPhone.getCityCode());
+									existing.setCountryCode(newPhone.getCountryCode());
+									existing.setUpdatedAt(LocalDateTime.now());
+								},
+								() -> {
+									// Si no existe, lo agregamos como nuevo
+									newPhone.setUser(user);
+									newPhone.setCreatedAt(LocalDateTime.now());
+									existingTelephones.add(newPhone);
+								});
+			} else {
+				// Si no tiene ID, es un teléfono nuevo
+				newPhone.setUser(user);
+				newPhone.setCreatedAt(LocalDateTime.now());
+				existingTelephones.add(newPhone);
+			}
+		});
 	}
 
-	public void patchTelephones(UserRequest userRequest, User user) {
+	public void patchTelephones(PatchUserRequest userRequest, User user) {
 		log.info("Patch User patchTelephones: {}", user);
 		try {
 			List<Telephone> existingTelephones = user.getTelephones();

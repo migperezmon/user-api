@@ -63,10 +63,10 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.token").value("jwt-token"))
-                .andExpect(jsonPath("$.activo").value(true))
-                .andExpect(jsonPath("$.creado").value("2023-10-01T00:00:00Z"))
-                .andExpect(jsonPath("$.modificado").value("2023-10-01T00:00:00Z"))
-                .andExpect(jsonPath("$.ultimoLogin").value("2023-10-01T00:00:00Z"));
+                .andExpect(jsonPath("$.is_active").value(true))
+                .andExpect(jsonPath("$.created").value("2023-10-01T00:00:00Z"))
+                .andExpect(jsonPath("$.modified").value("2023-10-01T00:00:00Z"))
+                .andExpect(jsonPath("$.last_login").value("2023-10-01T00:00:00Z"));
     }
 
     @Test

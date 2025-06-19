@@ -20,22 +20,22 @@ public class UserResponse {
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("creado")
+    @JsonProperty("created")
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private String creado;
 
-    @JsonProperty("modificado")
+    @JsonProperty("modified")
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private String modificado;
 
-    @JsonProperty("ultimoLogin")
+    @JsonProperty("last_login")
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private String ultimoLogin;
 
     @JsonProperty("token")
     private String token;
 
-    @JsonProperty("activo")
+    @JsonProperty("is_active")
     private Boolean activo;
 
 }

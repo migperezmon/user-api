@@ -1,7 +1,7 @@
 package cl.ntt.userapi.user_api.utils;
 
-import cl.ntt.userapi.user_api.dto.TelephoneRequest;
-import cl.ntt.userapi.user_api.dto.UserRequest;
+import cl.ntt.userapi.user_api.dto.PhoneRequest;
+import cl.ntt.userapi.user_api.dto.CreateUserRequest;
 import cl.ntt.userapi.user_api.model.Telephone;
 import cl.ntt.userapi.user_api.model.User;
 
@@ -11,7 +11,7 @@ public class Mapper {
         throw new UnsupportedOperationException("Utility class");
     }
 
-    public static Telephone phoneRequestToTelephone(TelephoneRequest telephoneRequest) {
+    public static Telephone phoneRequestToTelephone(PhoneRequest telephoneRequest) {
         return Telephone.builder()
                 .id(telephoneRequest.getId())
                 .number(telephoneRequest.getNumero())
@@ -20,7 +20,7 @@ public class Mapper {
                 .build();
     }
 
-    public static User userRequestToUser(UserRequest userRequest) {
+    public static User userRequestToUser(CreateUserRequest userRequest) {
         return User.builder()
                 .name(userRequest.getNombre())
                 .email(userRequest.getCorreo())

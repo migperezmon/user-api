@@ -4,20 +4,26 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cl.ntt.userapi.user_api.dto.UserRequest;
+import cl.ntt.userapi.user_api.dto.CreateUserRequest;
+import cl.ntt.userapi.user_api.dto.DeleteUserRequest;
+import cl.ntt.userapi.user_api.dto.PatchUserRequest;
+import cl.ntt.userapi.user_api.dto.UpdateUserRequest;
 import cl.ntt.userapi.user_api.dto.UserResponse;
-import cl.ntt.userapi.user_api.error.BadRequestException;
 import cl.ntt.userapi.user_api.services.interfaces.UserService;
-import cl.ntt.userapi.user_api.utils.Utils;
+import cl.ntt.userapi.user_api.validations.ValidationGroups.OnCreateUser;
+import cl.ntt.userapi.user_api.validations.ValidationGroups.OnDeleteUser;
+import cl.ntt.userapi.user_api.validations.ValidationGroups.OnPatchUser;
+import cl.ntt.userapi.user_api.validations.ValidationGroups.OnUpdateUser;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,98 +37,38 @@ public class UserController {
     }
 
     @PostMapping("/v1/user/create")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest user) {
-        if (user.getNombre() == null || user.getNombre().isEmpty()) {
-            throw new BadRequestException("El nombre no puede ser nulo o vacío");
-        }
-        if (user.getCorreo() == null || user.getCorreo().isEmpty()) {
-            throw new BadRequestException("El apellido no puede ser nulo o vacío");
-        }
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            throw new BadRequestException("La contraseña no puede ser nula o vacía");
-        }
-        if (!Utils.isValidEmail(user.getCorreo())) {
-            throw new BadRequestException("El correo no es válido");
-        }
-        if (!Utils.isValidPassword(user.getPassword())) {
-            throw new BadRequestException("La contraseña no es válida");
-        }
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Validated(OnCreateUser.class) CreateUserRequest user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
     @GetMapping("/v1/user/get/all")
-    public ResponseEntity<List<UserResponse>> getMethodName() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/v1/user/get/id")
-    public ResponseEntity<UserResponse> getUserById(@RequestParam("id") String id) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            return ResponseEntity.ok(userService.getUserById(uuid));
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("El UUID no es válido");
-        }
+    @GetMapping("/v1/user/get/id/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/v1/user/get/email")
-    public ResponseEntity<UserResponse> getByEmail(@RequestParam("email") String email) {
-        if (!Utils.isValidEmail(email)) {
-            throw new BadRequestException("El correo no es válido");
-        }
+    @GetMapping("/v1/user/get/email/{email}")
+    public ResponseEntity<UserResponse> getByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
     @PutMapping("/v1/user/update")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest user) {
+    public ResponseEntity<UserResponse> updateUser(@RequestBody @Validated(OnUpdateUser.class) UpdateUserRequest user) {
         log.info("User: {}", user);
-        if (!Utils.isValidEmail(user.getCorreo())) {
-            throw new BadRequestException("El correo no es válido");
-        }
-        if (!Utils.isValidPassword(user.getPassword())) {
-            throw new BadRequestException("La contraseña no es válida");
-        }
-        if (user.getId() == null) {
-            throw new BadRequestException("El ID no puede ser nulo");
-        }
-        try {
-            UUID uuid = UUID.fromString(user.getId());
-            return ResponseEntity.ok(userService.updateUser(uuid, user));
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("El UUID no es válido");
-        }
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
     @PatchMapping("/v1/user/patch")
-    public ResponseEntity<UserResponse> patchUser(@RequestBody UserRequest user) {
-        log.info("Patch User: {}", user);
-        if (!Utils.isValidEmail(user.getCorreo())) {
-            throw new BadRequestException("El correo no es válido");
-        }
-        if (!Utils.isValidPassword(user.getPassword())) {
-            throw new BadRequestException("La contraseña no es válida");
-        }
-        if (user.getId() == null) {
-            throw new BadRequestException("El ID no puede ser nulo");
-        }
-        try {
-            UUID uuid = UUID.fromString(user.getId());
-            return ResponseEntity.ok(userService.patchUser(uuid, user));
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("El UUID no es válido");
-        }
+    public ResponseEntity<UserResponse> patchUser(@RequestBody @Validated(OnPatchUser.class) PatchUserRequest user) {
+        return ResponseEntity.ok(userService.patchUser(user));
     }
 
     @DeleteMapping("/v1/user/delete")
-    public ResponseEntity<UserResponse> deleteUser(@RequestBody UserRequest user) {
-        if (user.getId() == null) {
-            throw new BadRequestException("El UUID no puede ser nulo");
-        }
-        try {
-            UUID uuid = UUID.fromString(user.getId());            
-            return ResponseEntity.ok(userService.deleteUser(uuid));
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("El UUID no es válido");
-        }
+    public ResponseEntity<UserResponse> deleteUser(@RequestBody @Validated(OnDeleteUser.class) DeleteUserRequest user) {
+        return ResponseEntity.ok(userService.deleteUser(user.getId()));
     }
 }

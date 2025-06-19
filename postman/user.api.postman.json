@@ -4,7 +4,7 @@
 		"name": "user-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30466279",
-		"_collection_link": "https://gold-astronaut-718078.postman.co/workspace/d6b52a64-bd6b-4815-80ef-4869f790badd/collection/30466279-baf86213-b2bb-4288-b93b-78a7e657abcc?action=share&source=collection_link&creator=30466279"
+		"_collection_link": "https://gold-astronaut-718078.postman.co/workspace/SGC-API~d6b52a64-bd6b-4815-80ef-4869f790badd/collection/30466279-baf86213-b2bb-4288-b93b-78a7e657abcc?action=share&source=collection_link&creator=30466279"
 	},
 	"item": [
 		{
@@ -17,7 +17,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"nombre\": \"Juan Rodriguez\",\r\n    \"correo\": \"mperezzzz@asd.cl\",\r\n    \"contraseña\": \"Mapm@12345678\",\r\n    \"telefonos\": [\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        },\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        },\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        },\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"name\": \"Juan Rodriguez\",\r\n    \"email\": \"mperezzzzz@asd.cl\",\r\n    \"password\": \"Mapm12345678\",\r\n    \"phones\": [\r\n        {\r\n            \"number\": \"213123123\",\r\n            \"city_code\": \"123\",\r\n            \"country_code\": \"123\"\r\n        },\r\n        {\r\n            \"number\": \"1234567\",\r\n            \"city_code\": \"1\",\r\n            \"country_code\": \"57\"\r\n        },\r\n        {\r\n            \"number\": \"1234567\",\r\n            \"city_code\": \"1\",\r\n            \"country_code\": \"57\"\r\n        },\r\n        {\r\n            \"number\": \"1234567\",\r\n            \"city_code\": \"1\",\r\n            \"country_code\": \"57\"\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -77,7 +77,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"mperezzzz@asd.cl\",\r\n    \"password\": \"Mapm@12345678\"\r\n}",
+					"raw": "{\r\n    \"email\": \"mperezzzzz@asd.cl\",\r\n    \"password\": \"Mapm12345678\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -128,7 +128,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/v1/user/get/email?email=mperezzzzz@asd.cl",
+					"raw": "http://localhost:8080/v1/user/get/email/mperezzzzz@asd.cl",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -138,13 +138,8 @@
 						"v1",
 						"user",
 						"get",
-						"email"
-					],
-					"query": [
-						{
-							"key": "email",
-							"value": "mperezzzzz@asd.cl"
-						}
+						"email",
+						"mperezzzzz@asd.cl"
 					]
 				}
 			},
@@ -166,7 +161,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/v1/user/get/id?id=2e1bbc2b-5633-4741-8bf6-197d6a36dce2",
+					"raw": "http://localhost:8080/v1/user/get/id/5e9de919-3300-4ee6-9e8b-1eb02246f766",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -176,13 +171,8 @@
 						"v1",
 						"user",
 						"get",
-						"id"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "2e1bbc2b-5633-4741-8bf6-197d6a36dce2"
-						}
+						"id",
+						"5e9de919-3300-4ee6-9e8b-1eb02246f766"
 					]
 				}
 			},
@@ -237,7 +227,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"b4009f4b-1ad1-482b-b964-29ef4c0f6dce\",\r\n    \"nombre\": \"Juan Rodriguez\",\r\n    \"correo\": \"mperezzzzz@asd.cl\",\r\n    \"contraseña\": \"Mapm@12345678\",\r\n    \"telefonos\": [\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        },\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        },\r\n        {\r\n            \"numero\": \"1234567\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"id\": \"f5e356f1-a0a2-4cf4-ab73-c018119bff6b\",\r\n    \"name\": \"Juan Rodriguez\",\r\n    \"email\": \"mperezzzzz@asd.cl\",\r\n    \"password\": \"Mapm@12345678\",\r\n    \"phones\": [\r\n        {\r\n            \"id\": \"7a336345-d468-40db-9bc4-5b85b0c1cb6a\",\r\n            \"number\": \"qweqweqwe\",\r\n            \"city_code\": \"12\",\r\n            \"country_code\": \"57\"\r\n        },\r\n        {\r\n            \"number\": \"1234567\",\r\n            \"city_code\": \"1\",\r\n            \"country_code\": \"57\"\r\n        },\r\n        {\r\n            \"number\": \"1234567\",\r\n            \"city_code\": \"1\",\r\n            \"country_code\": \"57\"\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -277,7 +267,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"9925e42d-d9fc-4bb0-9272-375e11eab747\",\r\n    \"nombre\": \"Miguel Pérez\",\r\n    \"correo\": \"mperezzzzz@asd.cl\",\r\n    \"contraseña\": \"Mapm@12345678\",\r\n    \"telefonos\": [\r\n        {\r\n            \"id\": \"2e7e0f2e-fd51-4d6e-b84a-63a69725d9eb\",\r\n            \"numero\": \"9999999999999999999999999\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        },\r\n        {\r\n            \"id\": \"5922e143-a9ed-441b-9573-60d04bae8842\",\r\n            \"numero\": \"7897897\",\r\n            \"codigoCiudad\": \"1\",\r\n            \"codigoPais\": \"57\"\r\n        }\r\n    ]\r\n}\r\n\r\n// select * from telefono_usuario where USER_ID = '71c7cbb3-4321-472d-bd36-1d7cf2126381'",
+					"raw": "{\r\n    \"id\": \"f5e356f1-a0a2-4cf4-ab73-c018119bff6b\",\r\n    \"name\": \"Miguel Pérez\",\r\n    \"email\": \"mperezzzzz@asd.cl\",\r\n    \"password\": \"Mapm@12345678\",\r\n    \"activo\": \"hola\",\r\n    \"phones\": [\r\n        {\r\n            \"id\": \"7a336345-d468-40db-9bc4-5b85b0c1cb6a\",\r\n            \"number\": \"asdasd\",\r\n            \"city_code\": \"1\",\r\n            \"country_code\": \"57\"\r\n        }\r\n    ]\r\n}\r\n\r\n// select * from telefono_usuario where USER_ID = '71c7cbb3-4321-472d-bd36-1d7cf2126381'",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -317,7 +307,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"2e1bbc2b-5633-4741-8bf6-197d6a36dce2\"\r\n}",
+					"raw": "{\r\n    \"id\": \"c676d58c-43b0-445d-81fa-5da6ed7ce2a5\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

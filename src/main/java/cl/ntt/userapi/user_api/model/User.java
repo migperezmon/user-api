@@ -56,7 +56,7 @@ public class User {
     private LocalDateTime deletedAt;
 
     @Column(name = "activo")
-    private boolean activo;
+    private boolean activo;    
 
     @PrePersist
     public void prePersist() {
@@ -70,6 +70,6 @@ public class User {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }    
-    
+    }
+
 }

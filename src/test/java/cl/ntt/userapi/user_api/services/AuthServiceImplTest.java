@@ -29,7 +29,7 @@ class UserServiceImpTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserServiceImp userService;    
+    private UserServiceImp userService;
 
     @Test
     void testLogin_UserNotFound() {
@@ -38,10 +38,10 @@ class UserServiceImpTest {
         loginRequest.setEmail("nonexistent@example.com");
         loginRequest.setPassword("Mapm@12345678");
 
-        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findByEmailAndActivoTrue(loginRequest.getEmail())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.login(loginRequest));
-        verify(userRepository, times(1)).findByEmail(loginRequest.getEmail());
+        verify(userRepository, times(1)).findByEmailAndActivoTrue(loginRequest.getEmail());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -57,10 +57,10 @@ class UserServiceImpTest {
         user.setEmail(loginRequest.getEmail());
         user.setPassword("password123");
 
-        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findByEmailAndActivoTrue(loginRequest.getEmail())).thenReturn(Optional.of(user));
 
         assertThrows(UnauthorizedException.class, () -> userService.login(loginRequest));
-        verify(userRepository, times(1)).findByEmail(loginRequest.getEmail());
+        verify(userRepository, times(1)).findByEmailAndActivoTrue(loginRequest.getEmail());
         verify(userRepository, never()).save(any(User.class));
     }
 }
